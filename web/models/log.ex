@@ -65,4 +65,23 @@ defmodule Digester.Log do
     %{ name: name, id: id }
   end
 
+  @doc """
+  Parse the OS name
+  """
+  def parse_os_name(syslog) do
+    chunks = String.split(syslog)
+    raw_name = Enum.at(chunks, @os)
+    [_raw, name] = Regex.run(~r/(\w+)/, raw_name)
+    name
+  end
+
+  @doc """
+  Parse the command
+  """
+  def parse_command(syslog) do
+    chunks = String.split(syslog)
+    [_raw, command] = Regex.run(~r/CMD \((.*)\)/, syslog)
+    command
+  end
+
 end
