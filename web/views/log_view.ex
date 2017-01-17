@@ -10,6 +10,10 @@ defmodule Digester.LogView do
   end
 
   def render("log.json", %{log: log}) do
-    %{content: log.content}
+    %{
+      rax_account_id: log.rax_account_id,
+      rax_host_id: log.rax_host_id,
+      content: log.content
+    }
   end
 end
