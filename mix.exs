@@ -38,6 +38,7 @@ defmodule Digester.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:timex, "~> 3.0"},
+     {:ex_doc, "~> 0.13", only: :dev},
      {:cowboy, "~> 1.0"}]
   end
 

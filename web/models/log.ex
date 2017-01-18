@@ -13,7 +13,6 @@ defmodule Digester.Log do
   @ip       3
   @process  4
   @os       5
-  @cmd      6
 
   schema "logs" do
     field :rax_host_id, :string
@@ -61,7 +60,7 @@ defmodule Digester.Log do
   def parse_process(syslog) do
     chunks = String.split(syslog)
     raw_process = Enum.at(chunks, @process)
-    [_raw, name, id] = Regex.run(~r/(\w+)\[(\d+)\]/, raw_process)
+    [_, name, id] = Regex.run(~r/(\w+)\[(\d+)\]/, raw_process)
     %{ name: name, id: id }
   end
 
@@ -71,7 +70,7 @@ defmodule Digester.Log do
   def parse_os_name(syslog) do
     chunks = String.split(syslog)
     raw_name = Enum.at(chunks, @os)
-    [_raw, name] = Regex.run(~r/(\w+)/, raw_name)
+    [_, name] = Regex.run(~r/(\w+)/, raw_name)
     name
   end
 
@@ -79,8 +78,7 @@ defmodule Digester.Log do
   Parse the command
   """
   def parse_command(syslog) do
-    chunks = String.split(syslog)
-    [_raw, command] = Regex.run(~r/CMD \((.*)\)/, syslog)
+    [_, command] = Regex.run(~r/CMD \((.*)\)/, syslog)
     command
   end
 
