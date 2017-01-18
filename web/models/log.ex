@@ -48,7 +48,7 @@ defmodule Digester.Log do
     }
 
     changeset = Digester.Log.changeset(%Digester.Log{}, params)
-    changeset = Ecto.Changeset.put_embed(changeset, :process_info, parse_process(chunks))
+    |> Ecto.Changeset.put_embed(:process_info, parse_process(chunks))
 
     case Digester.Repo.insert(changeset) do
       { :ok, log } -> log
