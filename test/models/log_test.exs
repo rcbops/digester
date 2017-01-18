@@ -26,9 +26,9 @@ defmodule Digester.LogTest do
     assert log.os == "ubuntu"
   end
 
-  # test "parse the command" do
-  #   log = Log.parse!(@syslog)
-  #   assert log.command == "/bin/bash -l -c 'cd /opt/web_apps/ccw/releases/20131216024215 && script/rails runner -e production '\\''TodoItem.close_forgotten_items'\\'' >> /var/log/cron 2>&1'"
-  # end
+  test "parse the command" do
+    log = Log.parse!(@syslog)
+    assert log.command == "/bin/bash -l -c 'cd /opt/web_apps/ccw/releases/20131216024215 && script/rails runner -e production '\\''TodoItem.close_forgotten_items'\\'' >> /var/log/cron 2>&1'"
+  end
 
 end

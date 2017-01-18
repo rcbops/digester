@@ -15,13 +15,14 @@ defmodule Digester.Log do
   @os       5
 
   schema "logs" do
-    field :rax_host_id, :string
-    field :rax_account_id, :string
+    field :command, :string
     field :content, :string
     field :datetime, :string
     field :ip_address, :string
-    field :process, :string
     field :os, :string
+    field :process, :string
+    field :rax_account_id, :string
+    field :rax_host_id, :string
     belongs_to :host, Digester.Host
 
     timestamps()
@@ -36,6 +37,7 @@ defmodule Digester.Log do
     changeset = Digester.Log.changeset(%Digester.Log{}, %{
       content: syslog,
       datetime: parse_datetime(chunks),
+      command: parse_command(syslog),
       ip_address: parse_ip_address(chunks),
       os: parse_os_name(chunks),
       process: process.id,
@@ -54,7 +56,7 @@ defmodule Digester.Log do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :os, :process])
+    |> cast(params, [:rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :os, :process, :command])
     |> validate_required([:rax_host_id, :rax_account_id, :content])
   end
 
