@@ -2,7 +2,7 @@ require IEx;
 
 defmodule Digester.Log do
   use Digester.Web, :model
-  use Timex
+  # use Timex
 
   @doc """
   These module attributes show position of data in a syslog
@@ -18,9 +18,35 @@ defmodule Digester.Log do
     field :rax_host_id, :string
     field :rax_account_id, :string
     field :content, :string
-    belongs_to :host, Digest.Host
+    field :datetime, :string
+    field :ip_address, :string
+    field :process, :string
+    field :os, :string
+    belongs_to :host, Digester.Host
 
     timestamps()
+  end
+
+  @doc """
+  Parse and insert a Syslog entry
+  """
+  def parse!(syslog) do
+    chunks    = String.split(syslog)
+    process   = parse_process(chunks) # Update to embedded schema
+    changeset = Digester.Log.changeset(%Digester.Log{}, %{
+      content: syslog,
+      datetime: parse_datetime(chunks),
+      ip_address: parse_ip_address(chunks),
+      os: parse_os_name(chunks),
+      process: process.id,
+      rax_account_id: "1",
+      rax_host_id: "1"
+    })
+
+    case Digester.Repo.insert(changeset) do
+      { :ok, log } -> log
+      { :error, changeset } -> changeset
+    end
   end
 
   @doc """
@@ -28,56 +54,38 @@ defmodule Digester.Log do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:rax_host_id, :rax_account_id, :content])
+    |> cast(params, [:rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :os, :process])
     |> validate_required([:rax_host_id, :rax_account_id, :content])
   end
 
-  @doc """
-  Parse the timestamp into a Timex object
-  """
-  def parse_datetime(syslog) do
-    chunks = String.split(syslog)
-    month  = Enum.at(chunks, @month)
-    day    = Enum.at(chunks, @day)
-    time   = Enum.at(chunks, @time)
+  defp parse_datetime(chunks) do
+    month = Enum.at(chunks, @month)
+    day   = Enum.at(chunks, @day)
+    time  = Enum.at(chunks, @time)
 
-    Timex.parse!("#{month} #{day} #{time}", "%b %e %H:%M:%S", :strftime)
+    # Timex.parse!("#{month} #{day} #{time}", "%b %e %H:%M:%S", :strftime)
+    "#{month} #{day} #{time}"
   end
 
-  @doc """
-  Parse the IP address
-  """
-  def parse_ip_address(syslog) do
-    chunks = String.split(syslog)
+  defp parse_ip_address(chunks) do
     Enum.at(chunks, @ip)
       |> String.replace("ip-", "")
       |> String.replace("-", ".")
   end
 
-  @doc """
-  Parse the process name and ID
-  """
-  def parse_process(syslog) do
-    chunks = String.split(syslog)
+  defp parse_process(chunks) do
     raw_process = Enum.at(chunks, @process)
     [_, name, id] = Regex.run(~r/(\w+)\[(\d+)\]/, raw_process)
     %{ name: name, id: id }
   end
 
-  @doc """
-  Parse the OS name
-  """
-  def parse_os_name(syslog) do
-    chunks = String.split(syslog)
+  defp parse_os_name(chunks) do
     raw_name = Enum.at(chunks, @os)
     [_, name] = Regex.run(~r/(\w+)/, raw_name)
     name
   end
 
-  @doc """
-  Parse the command
-  """
-  def parse_command(syslog) do
+  defp parse_command(syslog) do
     [_, command] = Regex.run(~r/CMD \((.*)\)/, syslog)
     command
   end
