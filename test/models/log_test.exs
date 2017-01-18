@@ -17,8 +17,8 @@ defmodule Digester.LogTest do
 
   test "parse the process name and ID" do
     log = Log.parse!(@syslog)
-    # assert log.process == %{ name: "CRON", id: "11934" }
-    assert log.process == "11934"
+    assert log.process_info.name == "CRON"
+    assert log.process_info.process_id == "11934"
   end
 
   test "parse the OS name" do
