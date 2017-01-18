@@ -11,14 +11,13 @@ defmodule Digester.Log do
   @time     2
   @ip       3
   @process  4
-  @os       5
+  @user     5
 
   schema "logs" do
-    field :command, :string
     field :content, :string
     field :datetime, :string
     field :ip_address, :string
-    field :os, :string
+    field :user, :string
     field :rax_account_id, :string
     field :rax_host_id, :string
 
@@ -40,9 +39,8 @@ defmodule Digester.Log do
     params = %{
       content: syslog,
       datetime: parse_datetime(chunks),
-      command: parse_command(syslog),
       ip_address: parse_ip_address(chunks),
-      os: parse_os_name(chunks),
+      user: parse_user_name(chunks),
       rax_account_id: "1",
       rax_host_id: "1"
     }
@@ -61,7 +59,7 @@ defmodule Digester.Log do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :os, :command ])
+    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user ])
     |> validate_required([:rax_host_id, :rax_account_id, :content])
   end
 
@@ -84,15 +82,10 @@ defmodule Digester.Log do
     %{ name: name, process_id: id }
   end
 
-  defp parse_os_name(chunks) do
-    raw_name = Enum.at(chunks, @os)
+  defp parse_user_name(chunks) do
+    raw_name = Enum.at(chunks, @user)
     [_, name] = Regex.run(~r/(\w+)/, raw_name)
     name
-  end
-
-  defp parse_command(syslog) do
-    [_, command] = Regex.run(~r/CMD \((.*)\)/, syslog)
-    command
   end
 
 end

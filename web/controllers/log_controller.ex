@@ -11,14 +11,8 @@ defmodule Digester.LogController do
   end
 
   def create(conn, params) do
-    { :ok, raw_log } = Map.fetch(params, "log")
-    changeset = Log.changeset(%Log{}, %{ rax_host_id: "1", rax_account_id: "1", content: raw_log })
-
-    case Repo.insert(changeset) do
-      {:ok, log} ->
-        render conn, "show.json", log: log
-      {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
-    end
+    { :ok, syslog } = Map.fetch(params, "log")
+    log = Digester.Log.parse!(syslog)
+    render conn, "show.json", log: log
   end
 end
