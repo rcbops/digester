@@ -19,7 +19,7 @@ defmodule Digester.Mixfile do
   def application do
     [mod: {Digester, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :timex]]
+                    :phoenix_ecto, :postgrex, :timex, :absinthe]]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,6 +39,8 @@ defmodule Digester.Mixfile do
      {:gettext, "~> 0.11"},
      {:timex, "~> 3.0"},
      {:ex_doc, "~> 0.13", only: :dev},
+     {:absinthe, "~> 1.2.0"},
+     {:absinthe_plug, "~> 1.1"},
      {:cowboy, "~> 1.0"}]
   end
 

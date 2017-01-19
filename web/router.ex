@@ -1,6 +1,8 @@
 defmodule Digester.Router do
   use Digester.Web, :router
 
+  forward "/", Absinthe.Plug, schema: Digester.Schema
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
