@@ -11,12 +11,12 @@ defmodule Mix.Tasks.Import.Cron do
     Enum.each(Path.wildcard(root), fn path ->
       File.stream!(path) |> Stream.chunk(50) |> Enum.each(fn chunk ->
         Enum.each(chunk, fn(line) ->
-          Digester.Log.parse!(line)
+          Digester.Logs.Cron.parse!(line)
         end)
       end)
     end)
 
-    count = Digester.Repo.aggregate(Digester.Log, :count, :id)
+    count = Digester.Repo.aggregate(Digester.Logs.Cron, :count, :id)
     Mix.shell.info "CRON logs: #{count}"
   end
 end

@@ -1,7 +1,7 @@
 defmodule Digester.Router do
   use Digester.Web, :router
 
-  forward "/", Absinthe.Plug, schema: Digester.Schema
+  forward "/ql", Absinthe.Plug, schema: Digester.Schema
 
   pipeline :browser do
     plug :accepts, ["html"]

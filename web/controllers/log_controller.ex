@@ -6,7 +6,7 @@ defmodule Digester.LogController do
   alias Digester.Repo
 
   def index(conn, _params) do
-    logs = Repo.all(Log)
+    logs = Repo.all(from l in Log, limit: 10)
     render conn, "index.json", logs: logs
   end
 

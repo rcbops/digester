@@ -1,6 +1,6 @@
 require IEx;
 
-defmodule Digester.Log do
+defmodule Digester.Logs.Cron do
   use Digester.Web, :model
 
   @doc """
@@ -20,6 +20,7 @@ defmodule Digester.Log do
     field :user, :string
     field :rax_account_id, :string
     field :rax_host_id, :string
+    field :type, :string
 
     embeds_one :process_info, ProcessInfo do
       field :name
@@ -41,11 +42,12 @@ defmodule Digester.Log do
       datetime: parse_datetime(chunks),
       ip_address: parse_ip_address(chunks),
       user: parse_user_name(chunks),
+      type: "cron",
       rax_account_id: "1",
       rax_host_id: "1"
     }
 
-    changeset = Digester.Log.changeset(%Digester.Log{}, params)
+    changeset = Digester.Logs.Cron.changeset(%Digester.Logs.Cron{}, params)
     |> Ecto.Changeset.put_embed(:process_info, parse_process(chunks))
 
     case Digester.Repo.insert(changeset) do
@@ -59,8 +61,8 @@ defmodule Digester.Log do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user ])
-    |> validate_required([:rax_host_id, :rax_account_id, :content])
+    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user, :type ])
+    |> validate_required([:rax_host_id, :rax_account_id, :content, :type])
   end
 
   defp parse_datetime(chunks) do
