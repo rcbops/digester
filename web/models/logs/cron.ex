@@ -13,14 +13,13 @@ defmodule Digester.Logs.Cron do
   @process  4
   @user     5
 
-  schema "logs" do
+  schema "cron_logs" do
     field :content, :string
     field :datetime, :string
     field :ip_address, :string
     field :user, :string
     field :rax_account_id, :string
     field :rax_host_id, :string
-    field :type, :string
 
     embeds_one :process_info, ProcessInfo do
       field :name
@@ -61,8 +60,8 @@ defmodule Digester.Logs.Cron do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user, :type ])
-    |> validate_required([:rax_host_id, :rax_account_id, :content, :type])
+    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user])
+    |> validate_required([:rax_host_id, :rax_account_id, :content])
   end
 
   defp parse_datetime(chunks) do

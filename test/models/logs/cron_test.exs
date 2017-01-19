@@ -1,4 +1,4 @@
-defmodule Digester.LogTest do
+defmodule Digester.Logs.CronTest do
   use Digester.ModelCase
 
   alias Digester.Logs.Cron
