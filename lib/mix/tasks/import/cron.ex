@@ -6,10 +6,13 @@ defmodule Mix.Tasks.Import.Cron do
   def run(_) do
     Mix.Task.run "app.start", []
 
-    path = "/Users/mdarby/Desktop/log-storage/729732-comp-s3700-028/CRON.log"
-    File.stream!(path) |> Stream.chunk(50) |> Enum.each(fn chunk ->
-      Enum.each(chunk, fn(line) ->
-        Digester.Log.parse!(line)
+    root = "/Users/mdarby/Desktop/log-storage/**/CRON.log"
+    
+    Enum.each(Path.wildcard(root), fn path ->
+      File.stream!(path) |> Stream.chunk(50) |> Enum.each(fn chunk ->
+        Enum.each(chunk, fn(line) ->
+          Digester.Log.parse!(line)
+        end)
       end)
     end)
 
