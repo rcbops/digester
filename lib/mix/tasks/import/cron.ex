@@ -7,7 +7,7 @@ defmodule Mix.Tasks.Import.Cron do
     Mix.Task.run "app.start", []
 
     root = "/Users/mdarby/Desktop/log-storage/**/CRON.log"
-    
+
     Enum.each(Path.wildcard(root), fn path ->
       File.stream!(path) |> Stream.chunk(50) |> Enum.each(fn chunk ->
         Enum.each(chunk, fn(line) ->
