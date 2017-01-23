@@ -44,6 +44,7 @@ defmodule Digester.Mixfile do
      {:absinthe_plug, "~> 1.1"},
      {:distillery, "~> 1.0"},
      {:uuid, "~> 1.1"},
+     {:poison, "~> 2.0"},
      {:cowboy, "~> 1.0"}]
   end
 

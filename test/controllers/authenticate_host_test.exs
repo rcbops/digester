@@ -1,4 +1,5 @@
 require IEx
+require Poison
 
 defmodule Digester.Plugs.AuthenticateHostTest do
   use Digester.ConnCase
@@ -9,9 +10,11 @@ defmodule Digester.Plugs.AuthenticateHostTest do
     assert conn.req_headers == [{"x-rax-host-id", "valuable"}]
   end
 
-  test "GET /api/logs", %{conn: conn} do
-    conn = put_req_header(conn, "x-rax-host-id", "valuable")
-    conn = get conn, "/api/logs"
-    assert json_response(conn, 200)
+  test "POST /api/hosts", %{conn: conn} do
+    conn     = put_req_header(conn, "content-type", "application/json")
+    json     = Poison.encode!(%{host: ""})
+    conn     = post conn, "/api/hosts", json
+    response = Poison.decode!(conn.resp_body)
+    refute response["uuid"] == nil
   end
 end

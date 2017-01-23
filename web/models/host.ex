@@ -1,8 +1,8 @@
 defmodule Digester.Host do
   use Digester.Web, :model
 
-  @valid_attributes []
-  @required_attributes []
+  @valid_attributes [:uuid]
+  @required_attributes [:uuid]
 
   schema "hosts" do
     field :brand, :string
