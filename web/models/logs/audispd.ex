@@ -34,7 +34,12 @@ defmodule Digester.Logs.Audispd do
   def parse!(log) do
     params = %{
       content: log,
-      datetime: parse_datetime(log)
+      datetime: parse_datetime(log),
+      node: parse_node(log),
+      type: parse_type(log),
+      msg: parse_msg(log),
+      pid: parse_pid(log),
+      uid: parse_uid(log)
     }
 
     changeset = Digester.Logs.Audispd.changeset(%Digester.Logs.Audispd{}, params)
@@ -57,6 +62,31 @@ defmodule Digester.Logs.Audispd do
   defp parse_datetime(log) do
     [dt, _] = Regex.run(~r/(\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})/, log)
     dt
+  end
+
+  defp parse_node(log) do
+    [_, node] = Regex.run(~r/node=([\w|\d|-]*)/, log)
+    node
+  end
+
+  defp parse_type(log) do
+    [_, type] = Regex.run(~r/type=([\w|\d|-|_]*)/, log)
+    type
+  end
+
+  defp parse_msg(log) do
+    [_, msg] = Regex.run(~r/msg=([^ ]*)/, log)
+    msg
+  end
+
+  defp parse_pid(log) do
+    [_, pid] = Regex.run(~r/pid=([^ ]*)/, log)
+    pid
+  end
+
+  defp parse_uid(log) do
+    [_, uid] = Regex.run(~r/uid=([^ ]*)/, log)
+    uid
   end
 
 end
