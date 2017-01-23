@@ -16,9 +16,8 @@ defmodule Digester.LogView do
       ip_address: log.ip_address,
       user: log.user,
       rax_account_id: log.rax_account_id,
-      rax_host_id: log.rax_host_id,
-      process_info: log.process_info,
-      type: log.type
+      host_uuid: log.host_uuid,
+      process_info: log.process_info
     }
   end
 end

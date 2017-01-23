@@ -10,8 +10,9 @@ defmodule Digester.LogController do
   end
 
   def create(conn, params) do
-    { :ok, syslog } = Map.fetch(params, "log")
-    log = Digester.Logs.Cron.parse!(syslog)
+    { :ok, log } = Map.fetch(params, "log")
+    host_uuid = conn.assigns[:host_uuid]
+    log = Digester.Logs.Cron.parse!(host_uuid, log)
     render conn, "show.json", log: log
   end
 end

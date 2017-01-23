@@ -35,18 +35,17 @@ defmodule Digester.Logs.Cron do
   end
 
   @doc """
-  Parse and insert a Syslog entry
+  Parse and insert a Cron entry
   """
-  def parse!(syslog) do
-    chunks = String.split(syslog)
+  def parse!(host_uuid, log) do
+    chunks = String.split(log)
     params = %{
-      content: syslog,
+      content: log,
       datetime: parse_datetime(chunks),
       ip_address: parse_ip_address(chunks),
       user: parse_user_name(chunks),
-      type: "cron",
       rax_account_id: "1",
-      host_uuid: "1"
+      host_uuid: host_uuid
     }
 
     changeset = Digester.Logs.Cron.changeset(%Digester.Logs.Cron{}, params)
