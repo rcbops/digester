@@ -1,6 +1,9 @@
 defmodule Digester.Host do
   use Digester.Web, :model
 
+  @valid_attributes []
+  @required_attributes []
+
   schema "hosts" do
     field :brand, :string
     field :model, :string
@@ -9,6 +12,8 @@ defmodule Digester.Host do
     field :firmware, :string
     field :region, :string
     field :rack_id, :string
+    field :uuid, :string
+    field :rax_account_id, :string
 
     embeds_many :cpus, CPU do
       field :model
@@ -64,7 +69,8 @@ defmodule Digester.Host do
       field :version
     end
 
-    has_many :logs, Digester.Log
+    has_many :cron_logs, Digester.Logs.Cron
+    has_many :audispd_logs, Digester.Logs.Audispd
 
     timestamps()
   end
@@ -74,7 +80,21 @@ defmodule Digester.Host do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:rax_host_id, :rax_account_id, :content])
-    |> validate_required([:rax_host_id, :rax_account_id, :content])
+    |> cast(params, @required_attributes)
+    |> validate_required(@valid_attributes)
+  end
+
+  def create!(params) do
+    params = %{
+      uuid: UUID.uuid1()
+    }
+
+    changeset = Digester.Host.changeset(%Digester.Host{}, params)
+    # |> Ecto.Changeset.put_embed(:process_info, parse_process(chunks))
+
+    case Digester.Repo.insert(changeset) do
+      { :ok, log } -> log
+      { :error, changeset } -> changeset
+    end
   end
 end

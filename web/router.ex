@@ -1,5 +1,6 @@
 defmodule Digester.Router do
   use Digester.Web, :router
+  import Digester.Plugs.AuthenticateHost
 
   forward "/ql", Absinthe.Plug, schema: Digester.Schema
 
@@ -13,6 +14,7 @@ defmodule Digester.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :authenticate_host
   end
 
 

@@ -19,7 +19,7 @@ defmodule Digester.Logs.Cron do
     field :ip_address, :string
     field :user, :string
     field :rax_account_id, :string
-    field :rax_host_id, :string
+    field :host_uuid, :string
 
     embeds_one :process_info, ProcessInfo do
       field :name
@@ -43,7 +43,7 @@ defmodule Digester.Logs.Cron do
       user: parse_user_name(chunks),
       type: "cron",
       rax_account_id: "1",
-      rax_host_id: "1"
+      host_uuid: "1"
     }
 
     changeset = Digester.Logs.Cron.changeset(%Digester.Logs.Cron{}, params)
@@ -60,8 +60,8 @@ defmodule Digester.Logs.Cron do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [ :rax_host_id, :rax_account_id, :content, :datetime, :ip_address, :user])
-    |> validate_required([:rax_host_id, :rax_account_id, :content])
+    |> cast(params, [ :host_uuid, :rax_account_id, :content, :datetime, :ip_address, :user])
+    |> validate_required([:host_uuid, :rax_account_id, :content])
   end
 
   defp parse_datetime(chunks) do
