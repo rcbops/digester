@@ -4,9 +4,8 @@ defmodule Digester.Logs.Audispd do
   use Digester.Web, :model
 
   @valid_attributes [:datetime, :node, :type, :msg, :pid, :uid, :auid, :ses,
-    :acct, :exe, :hostname, :addr, :terminal, :res, :content]
-  @required_attributes [:datetime, :node, :type, :msg, :pid, :uid, :auid, :ses,
-    :acct, :exe, :hostname, :addr, :terminal, :res, :content]
+    :acct, :exe, :hostname, :addr, :terminal, :res, :content, :acct, :host_id]
+  @required_attributes [:datetime, :host_id]
 
   schema "audispd_logs" do
     field :datetime, :string
@@ -31,27 +30,30 @@ defmodule Digester.Logs.Audispd do
   @doc """
   Parse and insert a Audispd entry
   """
-  def parse!(log) do
+  def parse!(host_id, log) do
     params = %{
+      acct: parse_attribute("acct", log),
+      addr: parse_attribute("addr", log),
+      auid: parse_attribute("auid", log),
       content: log,
       datetime: parse_datetime(log),
-      node: parse_attribute("node", log),
-      type: parse_attribute("type", log),
-      msg: parse_attribute("msg", log),
-      pid: parse_attribute("pid", log),
-      uid: parse_attribute("uid", log),
-      ses: parse_attribute("ses", log),
-      acct: parse_attribute("acct", log),
       exe: parse_attribute("exe", log),
+      host_id: host_id,
       hostname: parse_attribute("hostname", log),
-      addr: parse_attribute("addr", log),
+      msg: parse_attribute("msg", log),
+      node: parse_attribute("node", log),
+      pid: parse_attribute("pid", log),
+      res: parse_attribute("res", log),
+      ses: parse_attribute("ses", log),
       terminal: parse_attribute("terminal", log),
-      res: parse_attribute("res", log)
+      type: parse_attribute("type", log),
+      uid: parse_attribute("uid", log)
     }
 
     changeset = Digester.Logs.Audispd.changeset(%Digester.Logs.Audispd{}, params)
+    IEx.pry
 
-    case Digester.Repo.insert(changeset) do
+    case Digester.Repo.insert!(changeset) do
       { :ok, log } -> log
       { :error, changeset } -> changeset
     end
@@ -63,7 +65,7 @@ defmodule Digester.Logs.Audispd do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, @valid_attributes)
-    |> validate_required([])
+    |> validate_required(@required_attributes)
   end
 
   defp parse_attribute(name, log) do

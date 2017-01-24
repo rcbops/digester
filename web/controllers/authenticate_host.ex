@@ -3,6 +3,9 @@ require IEx
 defmodule Digester.Plugs.AuthenticateHost do
   import Plug.Conn
 
+  alias Digester.Repo
+  alias Digester.Host
+
   def authenticate_host(conn, _) do
     if setting_up_host?(conn) do
       conn
@@ -12,7 +15,11 @@ defmodule Digester.Plugs.AuthenticateHost do
       |> Tuple.to_list
       |> List.last
 
-      conn |> assign(:host_uuid, host_uuid)
+      host = Repo.get_by(Host, host_uuid)
+
+      conn
+      |> assign(:host_uuid, host_uuid)
+      |> assign(:current_host, host)
     end
   end
 

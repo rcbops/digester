@@ -56,7 +56,8 @@ CREATE TABLE audispd_logs (
     res character varying(255),
     content text,
     inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    host_uuid character varying(255)
 );
 
 
@@ -86,8 +87,7 @@ ALTER SEQUENCE audispd_logs_id_seq OWNED BY audispd_logs.id;
 CREATE TABLE cron_logs (
     id integer NOT NULL,
     host_id character varying(255),
-    rax_host_id character varying(255),
-    rax_account_id character varying(255),
+    host_uuid character varying(255),
     content text,
     inserted_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -120,7 +120,13 @@ CREATE TABLE hosts (
     region character varying(255),
     rack_id character varying(255),
     inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    uuid character varying(255),
+    rax_account_id character varying(255),
+    raids text,
+    rams text,
+    operating_system text,
+    applications text
 );
 
 
@@ -226,8 +232,43 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
+-- Name: audispd_logs_host_uuid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX audispd_logs_host_uuid_index ON audispd_logs USING btree (host_uuid);
+
+
+--
+-- Name: cron_logs_host_uuid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cron_logs_host_uuid_index ON cron_logs USING btree (host_uuid);
+
+
+--
+-- Name: hosts_rax_account_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX hosts_rax_account_id_index ON hosts USING btree (rax_account_id);
+
+
+--
+-- Name: hosts_uuid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX hosts_uuid_index ON hosts USING btree (uuid);
+
+
+--
+-- Name: hosts_uuid_rax_account_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX hosts_uuid_rax_account_id_index ON hosts USING btree (uuid, rax_account_id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO "schema_migrations" (version) VALUES (20170117154014), (20170117162035), (20170118021925), (20170118162025), (20170118162731), (20170118215535), (20170118223707), (20170118223909), (20170118233047), (20170119205157), (20170119213417);
+INSERT INTO "schema_migrations" (version) VALUES (20170117154014), (20170117162035), (20170118021925), (20170118162025), (20170118162731), (20170118215535), (20170118223707), (20170118223909), (20170118233047), (20170119205157), (20170119213417), (20170123190827), (20170123214224), (20170123220322);
 

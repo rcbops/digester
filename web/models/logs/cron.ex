@@ -13,15 +13,14 @@ defmodule Digester.Logs.Cron do
   @process  4
   @user     5
 
-  @valid_attributes [:host_uuid, :rax_account_id, :content, :datetime, :ip_address, :user]
-  @required_attributes [:host_uuid, :rax_account_id, :content]
+  @valid_attributes [:host_uuid, :content, :datetime, :ip_address, :user]
+  @required_attributes [:host_uuid, :content]
 
   schema "cron_logs" do
     field :content, :string
     field :datetime, :string
     field :ip_address, :string
     field :user, :string
-    field :rax_account_id, :string
     field :host_uuid, :string
 
     embeds_one :process_info, ProcessInfo do
@@ -44,7 +43,6 @@ defmodule Digester.Logs.Cron do
       datetime: parse_datetime(chunks),
       ip_address: parse_ip_address(chunks),
       user: parse_user_name(chunks),
-      rax_account_id: "1",
       host_uuid: host_uuid
     }
 

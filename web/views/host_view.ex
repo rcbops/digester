@@ -18,8 +18,7 @@ defmodule Digester.HostView do
       firmware: host.firmware,
       region: host.region,
       rack_id: host.rack_id,
-      uuid: host.uuid,
-      rax_account_id: host.rax_account_id
+      uuid: host.uuid
     }
   end
 end

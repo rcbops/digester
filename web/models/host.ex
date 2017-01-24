@@ -13,7 +13,6 @@ defmodule Digester.Host do
     field :region, :string
     field :rack_id, :string
     field :uuid, :string
-    field :rax_account_id, :string
 
     embeds_many :cpus, CPU do
       field :model
@@ -84,7 +83,7 @@ defmodule Digester.Host do
     |> validate_required(@valid_attributes)
   end
 
-  def create!(params) do
+  def create!(_params) do
     params = %{
       uuid: UUID.uuid1()
     }

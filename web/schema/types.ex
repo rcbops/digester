@@ -6,7 +6,6 @@ defmodule Digester.Schema.Types do
     field :datetime, :string
     field :ip_address, :string
     field :user, :string
-    field :rax_account_id, :string
-    field :rax_host_id, :string
+    field :host_uuid, :string
   end
 end
