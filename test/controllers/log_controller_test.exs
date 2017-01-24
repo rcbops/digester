@@ -38,4 +38,11 @@ defmodule Digester.LogControllerTest do
     assert count == 0
   end
 
+  test "POST /api/logs (without x-rax-host-id)", %{conn: conn} do
+    conn = put_req_header(conn, "content-type", "application/json")
+    json = Poison.encode!(%{log: @cron})
+    conn = post conn, "/api/logs", json
+    assert conn.status == 404
+  end
+
 end
