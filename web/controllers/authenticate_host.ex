@@ -15,7 +15,7 @@ defmodule Digester.Plugs.AuthenticateHost do
       |> Tuple.to_list
       |> List.last
 
-      host = Repo.get_by(Host, host_uuid)
+      host = Repo.get_by(Host, uuid: host_uuid)
 
       conn
       |> assign(:host_uuid, host_uuid)

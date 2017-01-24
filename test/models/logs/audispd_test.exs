@@ -12,7 +12,7 @@ defmodule Digester.Logs.AudispdTest do
 
   test "parsing" do
     host = Host.create!(%{})
-    log = Audispd.parse!(host.uuid, @log)
+    log = Audispd.parse!(host.id, @log)
     assert log.acct == "\"root\""
     assert log.addr == "?"
     assert log.content == @log
@@ -27,7 +27,7 @@ defmodule Digester.Logs.AudispdTest do
     assert log.terminal == "cron"
     assert log.type == "USER_START"
     assert log.uid == "0"
-    assert log.host_id == "sample"
+    assert log.host_id == host.id
   end
 
 end

@@ -18,7 +18,7 @@ defmodule Digester.HostTest do
     host = Repo.get_by(Host, uuid: uuid)
     |> Repo.preload(:cron_logs)
     |> Repo.preload(:audispd_logs)
-    
+
     assert host.cron_logs == []
     assert host.audispd_logs == []
   end

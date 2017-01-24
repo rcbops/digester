@@ -24,7 +24,7 @@ defmodule Digester.Logs.Audispd do
     field :res, :string
     field :content, :string
 
-    belongs_to :host, Digester.Host
+    belongs_to :host, Digester.Host, foreign_key: :host_id
   end
 
   @doc """
@@ -51,9 +51,8 @@ defmodule Digester.Logs.Audispd do
     }
 
     changeset = Digester.Logs.Audispd.changeset(%Digester.Logs.Audispd{}, params)
-    IEx.pry
 
-    case Digester.Repo.insert!(changeset) do
+    case Digester.Repo.insert(changeset) do
       { :ok, log } -> log
       { :error, changeset } -> changeset
     end

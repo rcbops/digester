@@ -1,3 +1,5 @@
+require IEx
+
 defmodule Digester.Host do
   use Digester.Web, :model
 
@@ -79,8 +81,8 @@ defmodule Digester.Host do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, @required_attributes)
-    |> validate_required(@valid_attributes)
+    |> cast(params, @valid_attributes)
+    |> validate_required(@required_attributes)
   end
 
   def create!(_params) do
@@ -92,7 +94,7 @@ defmodule Digester.Host do
     # |> Ecto.Changeset.put_embed(:process_info, parse_process(chunks))
 
     case Digester.Repo.insert(changeset) do
-      { :ok, log } -> log
+      { :ok, host } -> host
       { :error, changeset } -> changeset
     end
   end
