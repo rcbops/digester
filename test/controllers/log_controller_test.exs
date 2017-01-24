@@ -7,10 +7,6 @@ defmodule Digester.LogControllerTest do
   Jan 17 11:30:01 ip-10-151-87-56 CRON[11934]: (ubuntu) CMD (/bin/bash -l -c 'cd /opt/web_apps/ccw/releases/20131216024215 && script/rails runner -e production '\\''TodoItem.close_forgotten_items'\\'' >> /var/log/cron 2>&1')\n"
   """
 
-  @audispd """
-  Jan 15 10:47:01 727405-object-disk-033 audispd: node=727405-object-disk-033 type=USER_START msg=audit(1484477221.034:938164/: pid=5400 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:session_open acct="root" exe="/usr/sbin/cron" hostname=? addr=? terminal=cron res=success'
-  """
-
   test "GET /", %{conn: conn} do
     conn = put_req_header(conn, "x-rax-host-id", "valuable")
     conn = get conn, "/"
@@ -32,10 +28,14 @@ defmodule Digester.LogControllerTest do
     json      = Poison.encode!(%{log: @cron})
     conn      = post conn, "/api/logs", json
     response  = Poison.decode!(conn.resp_body)
-    count     = Digester.Repo.aggregate(Digester.Logs.Cron, :count, :id)
 
     assert response["host_uuid"] == host_uuid
+
+    count = Digester.Repo.aggregate(Digester.Logs.Cron, :count, :id)
     assert count == 1
+
+    count = Digester.Repo.aggregate(Digester.Logs.Audispd, :count, :id)
+    assert count == 0
   end
 
 end
