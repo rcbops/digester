@@ -50,11 +50,12 @@ defmodule Digester.Logs.Audispd do
       uid: parse_attribute("uid", log)
     }
 
-    changeset = Digester.Logs.Audispd.changeset(%Digester.Logs.Audispd{}, params)
+    changeset = %Digester.Logs.Audispd{}
+    |> Digester.Logs.Audispd.changeset(params)
 
     case Digester.Repo.insert(changeset) do
       { :ok, log } -> log
-      { :error, changeset } -> changeset
+      { :error, set } -> set
     end
   end
 
@@ -65,6 +66,10 @@ defmodule Digester.Logs.Audispd do
     struct
     |> cast(params, @valid_attributes)
     |> validate_required(@required_attributes)
+  end
+
+  def matching_regex do
+    ~r/audispd:/
   end
 
   defp parse_attribute(name, log) do

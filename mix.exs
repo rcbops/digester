@@ -45,6 +45,8 @@ defmodule Digester.Mixfile do
      {:distillery, "~> 1.0"},
      {:uuid, "~> 1.1"},
      {:poison, "~> 2.0"},
+     {:apex, "~> 0.7.0"},
+     {:credo, "~> 0.5", only: [:dev, :test]},
      {:cowboy, "~> 1.0"}]
   end
 

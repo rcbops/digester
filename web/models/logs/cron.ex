@@ -33,6 +33,10 @@ defmodule Digester.Logs.Cron do
     timestamps()
   end
 
+  def matching_regex do
+    ~r/CRON\[\d+\]:/
+  end
+
   @doc """
   Parse and insert a Cron entry
   """
@@ -46,7 +50,8 @@ defmodule Digester.Logs.Cron do
       host_uuid: host_uuid
     }
 
-    changeset = Digester.Logs.Cron.changeset(%Digester.Logs.Cron{}, params)
+    changeset = %Digester.Logs.Cron{}
+    |> Digester.Logs.Cron.changeset(params)
     |> Ecto.Changeset.put_embed(:process_info, parse_process(chunks))
 
     case Digester.Repo.insert(changeset) do
@@ -72,9 +77,10 @@ defmodule Digester.Logs.Cron do
   end
 
   defp parse_ip_address(chunks) do
-    Enum.at(chunks, @ip)
-      |> String.replace("ip-", "")
-      |> String.replace("-", ".")
+    chunks
+    |> Enum.at(@ip)
+    |> String.replace("ip-", "")
+    |> String.replace("-", ".")
   end
 
   defp parse_process(chunks) do

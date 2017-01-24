@@ -85,6 +85,7 @@ defmodule Digester.Host do
     |> validate_required(@required_attributes)
   end
 
+  @spec create!(params :: map) :: Digester.Host
   def create!(_params) do
     params = %{
       uuid: UUID.uuid1()
