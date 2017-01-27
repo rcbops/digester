@@ -20,7 +20,7 @@ defmodule Digester.Mixfile do
     [mod: {Digester, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :timex, :absinthe, :absinthe_plug, :mix,
-                    :distillery, :uuid]]
+                    :distillery, :uuid, :apex]]
   end
 
   # Specifies which paths to compile per environment.

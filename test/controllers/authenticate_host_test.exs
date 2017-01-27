@@ -15,8 +15,7 @@ defmodule Digester.Plugs.AuthenticateHostTest do
     conn     = put_req_header(conn, "content-type", "application/json")
     json     = Poison.encode!(%{host: ""})
     conn     = post conn, "/api/hosts", json
-    response = Poison.decode!(conn.resp_body)
-    refute response["uuid"] == nil
+    assert conn.status == 200
   end
 
   test "POST /api/logs (requires host_uuid)", %{conn: conn} do
@@ -25,8 +24,6 @@ defmodule Digester.Plugs.AuthenticateHostTest do
     conn      = put_req_header(conn, "x-rax-host-id", host_uuid)
     json      = Poison.encode!(%{log: @log})
     conn      = post conn, "/api/logs", json
-    response  = Poison.decode!(conn.resp_body)
-
-    assert response["host_uuid"] == host_uuid
+    assert conn.status == 200
   end
 end

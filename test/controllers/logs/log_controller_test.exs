@@ -1,6 +1,7 @@
 require Poison
+require IEx
 
-defmodule Digester.LogControllerTest do
+defmodule Digester.Logs.LogControllerTest do
   use Digester.ConnCase
 
   @cron """
@@ -27,9 +28,8 @@ defmodule Digester.LogControllerTest do
     conn      = put_req_header(conn, "x-rax-host-id", host_uuid)
     json      = Poison.encode!(%{log: @cron})
     conn      = post conn, "/api/logs", json
-    response  = Poison.decode!(conn.resp_body)
 
-    assert response["host_uuid"] == host_uuid
+    assert conn.status == 200
 
     count = Digester.Repo.aggregate(Digester.Logs.Cron, :count, :id)
     assert count == 1

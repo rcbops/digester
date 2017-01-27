@@ -6,7 +6,11 @@ defmodule Digester.Plugs.AuthenticateHost do
   alias Digester.Repo
   alias Digester.Host
 
-  def authenticate_host(conn, _) do
+  def init(options) do
+    options
+  end
+
+  def call(conn, _) do
     if setting_up_host?(conn) do
       conn
     else
@@ -28,7 +32,7 @@ defmodule Digester.Plugs.AuthenticateHost do
     host = Repo.get_by(Host, uuid: uuid)
 
     case host do
-      nil -> error_out!(conn)
+      nil -> conn |> error_out!
       _ ->
         conn
         |> assign(:host_uuid, host.uuid)
@@ -40,6 +44,7 @@ defmodule Digester.Plugs.AuthenticateHost do
     conn
     |> put_status(:not_found)
     |> Phoenix.Controller.put_view(Digester.ErrorView)
+    |> halt
   end
 
 end

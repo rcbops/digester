@@ -1,12 +1,12 @@
-defmodule Digester.LogView do
+defmodule Digester.Logs.CronView do
   use Digester.Web, :view
 
   def render("index.json", %{logs: logs}) do
-    render_many(logs, Digester.LogView, "log.json")
+    render_many(logs, Digester.Logs.CronView, "log.json")
   end
 
   def render("show.json", %{log: log}) do
-    render_one(log, Digester.LogView, "log.json")
+    render_one(log, Digester.Logs.CronView, "log.json")
   end
 
   def render("log.json", %{log: log}) do

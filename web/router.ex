@@ -1,6 +1,5 @@
 defmodule Digester.Router do
   use Digester.Web, :router
-  import Digester.Plugs.AuthenticateHost
 
   forward "/ql", Absinthe.Plug, schema: Digester.Schema
 
@@ -14,7 +13,7 @@ defmodule Digester.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug :authenticate_host
+    plug Digester.Plugs.AuthenticateHost
   end
 
 
@@ -27,7 +26,14 @@ defmodule Digester.Router do
   scope "/api", Digester do
     pipe_through :api
 
-    resources "/logs", LogController
-    resources "/hosts", HostController
+    # Singular endpoint for catching logs
+    post "/logs", Logs.LogController, :create
+
+    resources "/hosts", HostController do
+      scope "/logs", Logs do
+        resources "/cron", CronController
+        resources "/audispd", AudispdController
+      end
+    end
   end
 end
